@@ -21,6 +21,7 @@ import java.util.List;
 public class AdminRestUserController extends AbstractUserController {
 
     static final String REST_URL = "/rest/admin/users";
+
     @Autowired
     private AdminRestUserController adminRestUserController;
 

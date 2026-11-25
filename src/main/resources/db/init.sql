@@ -1,3 +1,6 @@
+-- Начальные данные. Схема создаётся Hibernate (ddl-auto), поэтому здесь только INSERT'ы.
+-- Скрипт выполняется один раз при старте приложения, если таблица users пуста.
+
 INSERT INTO USERS (name, email, password)
 VALUES ('User', 'user@yandex.ru', '{noop}password'),
        ('Admin', 'admin@gmail.com', '{noop}admin'),

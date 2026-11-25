@@ -15,8 +15,6 @@ import ru.ustinov.voting.web.formatter.DateFormatter;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Ivan Ustinov(ivanustinov1985@yandex.ru)
@@ -26,7 +24,7 @@ import java.util.List;
 
 @ApiIgnore
 @Controller
-public class RootControlller {
+public class RootController {
 
     @Autowired
     private RestaurantService restaurantService;
@@ -58,10 +56,8 @@ public class RootControlller {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/menusList")
     public String getMenusList(ModelMap modelMap) {
-        final List<String> activeProfiles = Arrays.stream(environment.getActiveProfiles()).toList();
-        if (activeProfiles.contains("ru_date_format")) {
-            modelMap.addAttribute("dateFormat", "ru_date_format");
-        }
+        modelMap.addAttribute("dateFormat",
+                environment.getProperty(DateFormatter.DATE_FORMAT_PROPERTY, DateFormatter.DEFAULT_DATE_FORMAT));
         return "menusList";
     }
 

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.MessageSource;
@@ -41,8 +40,7 @@ import java.util.TimeZone;
 @EnableScheduling
 public class AppConfig implements WebMvcConfigurer {
 
-    @Value("file:#{systemEnvironment[VOTING_ROOT]}config/messages/app")
-    private String name;
+    private static final String MESSAGE_BASENAME = "classpath:messages/app";
 
     @Autowired
     private Environment env;
@@ -95,7 +93,7 @@ public class AppConfig implements WebMvcConfigurer {
         final ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
         reloadableResourceBundleMessageSource.setCacheSeconds(5);
         reloadableResourceBundleMessageSource.setDefaultEncoding("UTF-8");
-        reloadableResourceBundleMessageSource.setBasenames(name);
+        reloadableResourceBundleMessageSource.setBasenames(MESSAGE_BASENAME);
         reloadableResourceBundleMessageSource.setFallbackToSystemLocale(false);
         return reloadableResourceBundleMessageSource;
     }

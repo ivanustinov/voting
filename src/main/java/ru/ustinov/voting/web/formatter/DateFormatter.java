@@ -2,7 +2,6 @@ package ru.ustinov.voting.web.formatter;
 
 import lombok.Data;
 import org.springframework.core.env.Environment;
-import ru.ustinov.voting.Profiles;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
@@ -17,13 +16,13 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class DateFormatter {
 
-    private static final String RU_DATE_FORMAT = "dd.MM.yyyy";
+    public static final String DATE_FORMAT_PROPERTY = "app.date-format";
 
-    private static final String ISO_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
-    public static String STATIC_ACTIVE_DATE_FORMAT = ISO_DATE_FORMAT;
+    public static String STATIC_ACTIVE_DATE_FORMAT = DEFAULT_DATE_FORMAT;
 
-    private Environment environment;
+    private final Environment environment;
 
     public DateFormatter(Environment environment) {
         this.environment = environment;
@@ -35,8 +34,6 @@ public class DateFormatter {
 
     @PostConstruct
     private void postConstr() {
-        if (environment.acceptsProfiles(Profiles.RU_DATE_FORMAT)) {
-            STATIC_ACTIVE_DATE_FORMAT = RU_DATE_FORMAT;
-        }
+        STATIC_ACTIVE_DATE_FORMAT = environment.getProperty(DATE_FORMAT_PROPERTY, DEFAULT_DATE_FORMAT);
     }
 }

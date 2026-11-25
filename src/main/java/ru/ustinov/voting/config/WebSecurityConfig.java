@@ -114,6 +114,7 @@ public class WebSecurityConfig {
                     .antMatchers("/profile/**").authenticated()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/swagger-ui/**").permitAll()
+                    .antMatchers("/actuator/health").permitAll()
                     .antMatchers("/**").authenticated()
                     .and().formLogin().loginPage("/login")
                     .loginProcessingUrl("/spring_security_check")

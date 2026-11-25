@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class MenuServise {
+public class MenuService {
 
     private DishRepository dishRepository;
 

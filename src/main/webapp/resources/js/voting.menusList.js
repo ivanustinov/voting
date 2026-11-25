@@ -167,7 +167,7 @@ $(document).ready(function () {
     $.get(emailSendingUrl, function (data) {
         $('#sendMailChecked').prop('checked', data);
     });
-    var date_format = (dateFormat === "ru_date_format" ? 'd.m.Y' : 'Y-m-d');
+    var date_format = (dateFormat === 'dd.MM.yyyy' ? 'd.m.Y' : 'Y-m-d');
     $.datetimepicker.setLocale(localeCode);
     $('#date').datetimepicker({
         timepicker: false,

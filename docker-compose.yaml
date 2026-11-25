@@ -1,12 +1,3 @@
-version: '3.5'
-volumes:
-  db:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./config/init-scripts
-
 services:
   voting-app:
     container_name: voting-app
@@ -14,29 +5,52 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 80:8080
+      - "80:8080"
     environment:
-      - DB_USER=user
-      - DB_PASSWORD=password
-      - DB_URL=jdbc:postgresql://postgres:5432/voting
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: "8080"
+      DB_URL: jdbc:postgresql://postgres:5432/voting
+      DB_USER: user
+      DB_PASSWORD: password
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/voting/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
 
   mail-sender:
-    image: 'mailsender:latest'
+    image: mailsender:latest
     container_name: mail-sender
     hostname: mailservise
     ports:
-      - 90:8081
+      - "90:8081"
+    restart: unless-stopped
 
   postgres:
-    image: 'postgres:16.1-alpine'
+    image: postgres:16.1-alpine
     hostname: postgres
     container_name: postgres
-    volumes:
-      - db:/docker-entrypoint-initdb.d
-      - /var/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: voting
+    ports:
+      # публикуем только на localhost, чтобы IDEA/клиенты могли подключиться с хоста
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d voting"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  pgdata:

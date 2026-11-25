@@ -18,8 +18,32 @@ Build a voting system for deciding where to have lunch.
 
 Each restaurant provides a new menu each day.
 
-To deploy the application to Docker, make the docker profile active in the 
-application.yaml file.
+Configuration is split by Spring profiles: `application.yaml` contains settings
+shared by all profiles, and `application-<profile>.yaml` contains profile-specific
+ones (`h2`, `postgres`, `docker`). The date format used in UI, JSON and request
+parameters is set by the `app.date-format` property (`dd.MM.yyyy` by default,
+use `yyyy-MM-dd` for ISO).
+
+On startup Hibernate creates the schema, and the application seeds an empty
+database from `src/main/resources/db/init.sql`. The script is skipped when the
+`users` table already contains data, so restarts do not duplicate it.
+
+Ready-to-use IntelliJ IDEA run configurations:
+
+* **VotingManager (h2)** — in-memory H2, no external database
+* **VotingManager (postgres)** — local PostgreSQL on `localhost:5432/voting`
+* **VotingManager (docker)** — PostgreSQL connection from `DB_URL`, `DB_USER`,
+  `DB_PASSWORD` (the Docker image sets `SPRING_PROFILES_ACTIVE=docker`)
+
+### Docker
+
+```sh
+docker compose up --build
+```
+
+The application is available at <http://localhost/voting>. The image is built in
+two stages (Maven + Java 17 JRE), listens on port `8080` inside the container,
+and exposes a health check at `/voting/actuator/health`.
 
 
 

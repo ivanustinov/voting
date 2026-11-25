@@ -21,7 +21,7 @@ import static ru.ustinov.voting.web.user.UserTestData.user;
  * @version 1.0
  * @since 18.11.2021
  */
-class RootControlllerTest extends AbstractControllerTest {
+class RootControllerTest extends AbstractControllerTest {
 
     @Test
     void voting() throws Exception {

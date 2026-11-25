@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.ustinov.voting.service.MenuServise;
+import ru.ustinov.voting.service.MenuService;
 import ru.ustinov.voting.web.AbstractControllerTest;
 import ru.ustinov.voting.web.formatter.DateFormatter;
 
@@ -29,7 +29,7 @@ import static ru.ustinov.voting.web.user.UserTestData.ADMIN_MAIL;
 class MenusRestControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private MenuServise menuServise;
+    private MenuService menuService;
 
     @Test
     void getAll() throws Exception {
@@ -45,7 +45,7 @@ class MenusRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(MenusRestController.REST_URL)
                 .param("date", DateFormatter.format(LocalDate.now())))
                 .andExpect(status().isNoContent());
-        assertEquals(List.of(MENUS_TO_2015_04_16), menuServise.getAll());
+        assertEquals(List.of(MENUS_TO_2015_04_16), menuService.getAll());
     }
 
     @Test
@@ -53,6 +53,6 @@ class MenusRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.post(MenusRestController.REST_URL)
                 .param("date", DateFormatter.format(LocalDate.now())))
                 .andExpect(status().isCreated());
-        assertEquals(menuServise.getAll(), List.of(MENUS_TO_COPIED, MENUS_TO_NOW,  MENUS_TO_2015_04_16));
+        assertEquals(menuService.getAll(), List.of(MENUS_TO_COPIED, MENUS_TO_NOW,  MENUS_TO_2015_04_16));
     }
 }
